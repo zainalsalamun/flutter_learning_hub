@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'flutter_learning_hub_page.dart';
+import 'lms/constants/app_design_tokens.dart';
+import 'lms/services/lms_progress_service.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await LmsProgressService.instance.init();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -21,27 +24,29 @@ class FlutterLearningHubApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Learning Hub & Widget Mastery',
+      title: 'Flutter LMS & Mastery',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF6366F1),
+          seedColor: AppColors.primary,
           brightness: Brightness.light,
-          primary: const Color(0xFF6366F1),
-          secondary: const Color(0xFF0284C7),
-          surface: const Color(0xFFF8FAFC),
+          primary: AppColors.primary,
+          onPrimary: AppColors.onPrimary,
+          secondary: AppColors.secondary,
+          surface: AppColors.surface,
+          surfaceContainer: AppColors.surfaceContainer,
         ),
-        scaffoldBackgroundColor: const Color(0xFFF8FAFC),
+        scaffoldBackgroundColor: AppColors.background,
         textTheme: GoogleFonts.plusJakartaSansTextTheme(
           Theme.of(context).textTheme,
         ),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          elevation: 0.5,
-          scrolledUnderElevation: 1,
+          backgroundColor: AppColors.surface,
+          elevation: 0,
+          scrolledUnderElevation: 0.5,
           surfaceTintColor: Colors.transparent,
-          iconTheme: IconThemeData(color: Color(0xFF0F172A)),
+          iconTheme: IconThemeData(color: AppColors.textPrimary),
         ),
       ),
       home: const FlutterLearningHubPage(),

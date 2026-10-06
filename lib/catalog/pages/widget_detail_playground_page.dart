@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../lms/inspector/pages/widget_inspector_studio_page.dart';
+import '../../lms/services/lms_progress_service.dart';
 import '../models/widget_item.dart';
 
 class WidgetDetailPlaygroundPage extends StatefulWidget {
@@ -16,17 +18,24 @@ class _WidgetDetailPlaygroundPageState extends State<WidgetDetailPlaygroundPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool _isDarkModePreview = false;
+  final LmsProgressService _lmsService = LmsProgressService.instance;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _lmsService.addListener(_onServiceUpdate);
   }
 
   @override
   void dispose() {
+    _lmsService.removeListener(_onServiceUpdate);
     _tabController.dispose();
     super.dispose();
+  }
+
+  void _onServiceUpdate() {
+    if (mounted) setState(() {});
   }
 
   @override
@@ -71,6 +80,45 @@ class _WidgetDetailPlaygroundPageState extends State<WidgetDetailPlaygroundPage>
             tooltip: 'Toggle Preview Theme',
             onPressed: () {
               setState(() => _isDarkModePreview = !_isDarkModePreview);
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.tune_rounded, color: Color(0xFF06B6D4)),
+            tooltip: 'Live Inspector Studio',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const WidgetInspectorStudioPage(),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              _lmsService.isWidgetBookmarked(item.id)
+                  ? Icons.bookmark_rounded
+                  : Icons.bookmark_border_rounded,
+              color: _lmsService.isWidgetBookmarked(item.id)
+                  ? const Color(0xFF6366F1)
+                  : Colors.black87,
+            ),
+            tooltip: 'Simpan ke Rapor Belajar',
+            onPressed: () async {
+              final isBookmarked =
+                  await _lmsService.toggleWidgetBookmark(item.id);
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    isBookmarked
+                        ? 'Widget disalin ke bookmark belajar.'
+                        : 'Widget dihapus dari bookmark.',
+                  ),
+                  duration: const Duration(seconds: 2),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
             },
           ),
           IconButton(

@@ -6,9 +6,11 @@ void main() {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const FlutterLearningHubApp());
 
-    // Verify that the bottom navigation labels exist
-    expect(find.text('Fundamentals'), findsOneWidget);
-    expect(find.text('Basic Widgets'), findsOneWidget);
-    expect(find.text('Pro Catalog'), findsOneWidget);
+    // Verify that the bottom navigation labels exist according to design
+    expect(find.text('Belajar'), findsOneWidget);
+    expect(find.text('Jalur Karir'), findsOneWidget);
+    expect(find.text('Kuis'), findsAtLeastNWidgets(1));
+    expect(find.text('Diskusi'), findsOneWidget);
+    expect(find.text('Profil'), findsOneWidget);
   });
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../data/lessons_repository.dart';
 import '../models/lesson_item.dart';
 import '../widgets/formatted_markdown_text.dart';
+import '../../lms/services/lms_progress_service.dart';
+import '../../lms/widgets/lesson_notes_bottom_sheet.dart';
 
 class LessonDetailPage extends StatefulWidget {
   final LessonItem lesson;
@@ -13,8 +16,25 @@ class LessonDetailPage extends StatefulWidget {
 }
 
 class _LessonDetailPageState extends State<LessonDetailPage> {
+  final LmsProgressService _lmsService = LmsProgressService.instance;
   int? _selectedQuizIndex;
   bool _hasSubmittedQuiz = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _lmsService.addListener(_onServiceUpdate);
+  }
+
+  @override
+  void dispose() {
+    _lmsService.removeListener(_onServiceUpdate);
+    super.dispose();
+  }
+
+  void _onServiceUpdate() {
+    if (mounted) setState(() {});
+  }
 
   void _copyCode(String code) {
     Clipboard.setData(ClipboardData(text: code));
@@ -58,6 +78,54 @@ class _LessonDetailPageState extends State<LessonDetailPage> {
             ),
           ],
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              _lmsService.getLessonNote(lesson.id) != null
+                  ? Icons.edit_note_rounded
+                  : Icons.note_add_outlined,
+              color: _lmsService.getLessonNote(lesson.id) != null
+                  ? const Color(0xFFD97706)
+                  : Colors.black87,
+            ),
+            tooltip: 'Catatan Pribadi',
+            onPressed: () {
+              LessonNotesBottomSheet.show(
+                context,
+                lesson: lesson,
+                lmsService: _lmsService,
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              _lmsService.isLessonBookmarked(lesson.id)
+                  ? Icons.bookmark_rounded
+                  : Icons.bookmark_border_rounded,
+              color: _lmsService.isLessonBookmarked(lesson.id)
+                  ? const Color(0xFF6366F1)
+                  : Colors.black87,
+            ),
+            tooltip: 'Simpan Materi',
+            onPressed: () async {
+              final isBookmarked =
+                  await _lmsService.toggleLessonBookmark(lesson.id);
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    isBookmarked
+                        ? 'Materi disimpan ke Rapor Belajar.'
+                        : 'Materi dihapus dari bookmark.',
+                  ),
+                  duration: const Duration(seconds: 2),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            },
+          ),
+          const SizedBox(width: 4),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -211,17 +279,172 @@ class _LessonDetailPageState extends State<LessonDetailPage> {
             ],
 
             const SizedBox(height: 24),
-            // Bottom Done button
-            FilledButton.icon(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.check_rounded, size: 18),
-              label: const Text('Selesai Membaca Modul Ini'),
-              style: FilledButton.styleFrom(
-                backgroundColor: lesson.module.color,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-            ),
+            // LMS Completion & Next Lesson Section
+            () {
+              final all = LessonsRepository.allLessons;
+              final currentIndex = all.indexWhere((l) => l.id == lesson.id);
+              final nextLesson = (currentIndex >= 0 && currentIndex < all.length - 1)
+                  ? all[currentIndex + 1]
+                  : null;
+              final isCompleted = _lmsService.isLessonCompleted(lesson.id);
+
+              return Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: isCompleted
+                      ? const Color(0xFFF0FDF4)
+                      : const Color(0xFFF8FAFC),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: isCompleted
+                        ? const Color(0xFF86EFAC)
+                        : const Color(0xFFCBD5E1),
+                    width: 1.5,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: isCompleted
+                                ? const Color(0xFF22C55E).withValues(alpha: 0.15)
+                                : const Color(0xFF6366F1).withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            isCompleted
+                                ? Icons.verified_rounded
+                                : Icons.emoji_events_rounded,
+                            color: isCompleted
+                                ? const Color(0xFF16A34A)
+                                : const Color(0xFF6366F1),
+                            size: 22,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                isCompleted
+                                    ? 'Materi Telah Tuntas'
+                                    : 'Selesaikan Materi Ini',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: isCompleted
+                                      ? const Color(0xFF166534)
+                                      : const Color(0xFF0F172A),
+                                ),
+                              ),
+                              Text(
+                                isCompleted
+                                    ? 'Kamu telah mengklaim +50 XP dari materi ini.'
+                                    : 'Tandai selesai untuk mendapatkan +50 XP ke profilmu.',
+                                style: TextStyle(
+                                  fontSize: 11.5,
+                                  color: isCompleted
+                                      ? const Color(0xFF15803D)
+                                      : const Color(0xFF64748B),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    FilledButton.icon(
+                      onPressed: () async {
+                        final completedNow =
+                            await _lmsService.toggleLessonCompleted(lesson.id);
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Row(
+                              children: [
+                                Icon(
+                                  completedNow
+                                      ? Icons.celebration_rounded
+                                      : Icons.undo_rounded,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  completedNow
+                                      ? 'Hebat! +50 XP Ditambahkan ke Akunmu'
+                                      : 'Status selesai dibatalkan (-50 XP).',
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            backgroundColor: completedNow
+                                ? const Color(0xFF10B981)
+                                : Colors.grey.shade700,
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        isCompleted
+                            ? Icons.check_circle_rounded
+                            : Icons.check_rounded,
+                        size: 18,
+                      ),
+                      label: Text(
+                        isCompleted
+                            ? 'Tuntas Dipelajari (Ketuk untuk Batal)'
+                            : 'Tandai Selesai (+50 XP)',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: isCompleted
+                            ? const Color(0xFF16A34A)
+                            : const Color(0xFF6366F1),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                    if (nextLesson != null) ...[
+                      const SizedBox(height: 10),
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => LessonDetailPage(lesson: nextLesson),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.arrow_forward_rounded, size: 18),
+                        label: Text(
+                          'Lanjut ke: ${nextLesson.title}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              );
+            }(),
             const SizedBox(height: 20),
           ],
         ),
@@ -467,6 +690,9 @@ class _LessonDetailPageState extends State<LessonDetailPage> {
                   _selectedQuizIndex = idx;
                   _hasSubmittedQuiz = true;
                 });
+                if (idx == quiz.correctIndex) {
+                  _lmsService.recordQuizCompleted(widget.lesson.id, 100);
+                }
               },
               child: Container(
                 margin: const EdgeInsets.only(bottom: 8),

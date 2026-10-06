@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../lms/inspector/models/inspector_preset.dart';
+import '../../lms/inspector/pages/widget_inspector_studio_page.dart';
+import '../../lms/services/lms_progress_service.dart';
 import '../models/basic_widget_model.dart';
 import '../../fundamentals/widgets/formatted_markdown_text.dart';
 
@@ -15,17 +18,24 @@ class BasicWidgetDetailPage extends StatefulWidget {
 class _BasicWidgetDetailPageState extends State<BasicWidgetDetailPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final LmsProgressService _lmsService = LmsProgressService.instance;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _lmsService.addListener(_onServiceUpdate);
   }
 
   @override
   void dispose() {
+    _lmsService.removeListener(_onServiceUpdate);
     _tabController.dispose();
     super.dispose();
+  }
+
+  void _onServiceUpdate() {
+    if (mounted) setState(() {});
   }
 
   void _copyCode() {
@@ -40,6 +50,32 @@ class _BasicWidgetDetailPageState extends State<BasicWidgetDetailPage>
         duration: const Duration(seconds: 2),
       ),
     );
+  }
+
+  InspectorCategory _resolveInspectorCategory(BasicWidgetModel item) {
+    final id = item.id.toLowerCase();
+    if (id.contains('button')) return InspectorCategory.button;
+    if (id.contains('text') || id.contains('rich_text')) {
+      return InspectorCategory.typography;
+    }
+    if (id.contains('card') ||
+        id.contains('backdrop') ||
+        id.contains('opacity')) {
+      return InspectorCategory.glassCard;
+    }
+    if (id.contains('row') ||
+        id.contains('column') ||
+        id.contains('stack') ||
+        id.contains('flex') ||
+        id.contains('align')) {
+      return InspectorCategory.flexLayout;
+    }
+    if (id.contains('animated') ||
+        id.contains('transform') ||
+        id.contains('transition')) {
+      return InspectorCategory.motion;
+    }
+    return InspectorCategory.boxContainer;
   }
 
   @override
@@ -77,6 +113,52 @@ class _BasicWidgetDetailPageState extends State<BasicWidgetDetailPage>
           ],
         ),
         actions: [
+          IconButton(
+            icon: Icon(
+              _lmsService.isWidgetBookmarked(item.id)
+                  ? Icons.bookmark_rounded
+                  : Icons.bookmark_border_rounded,
+              color: _lmsService.isWidgetBookmarked(item.id)
+                  ? const Color(0xFF6366F1)
+                  : Colors.black87,
+              size: 20,
+            ),
+            tooltip: 'Simpan ke Rapor Belajar',
+            onPressed: () async {
+              final isBookmarked =
+                  await _lmsService.toggleWidgetBookmark(item.id);
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    isBookmarked
+                        ? 'Widget disimpan ke Rapor Belajar.'
+                        : 'Widget dihapus dari bookmark.',
+                  ),
+                  duration: const Duration(seconds: 2),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.tune_rounded,
+              color: Color(0xFF06B6D4),
+              size: 20,
+            ),
+            tooltip: 'Live Inspector Studio',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => WidgetInspectorStudioPage(
+                    initialCategory: _resolveInspectorCategory(item),
+                  ),
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(
               Icons.copy_rounded,
@@ -196,6 +278,91 @@ class _BasicWidgetDetailPageState extends State<BasicWidgetDetailPage>
               ],
             ),
             child: item.previewBuilder(context),
+          ),
+          const SizedBox(height: 16),
+
+          // Interactive Studio Launcher Banner
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFF334155)),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF06B6D4).withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.tune_rounded,
+                    color: Color(0xFF22D3EE),
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Live Inspector Studio',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        'Tuning parameter live dengan visual canvas stage & generator kode Dart.',
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.7),
+                          fontSize: 11,
+                          height: 1.3,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => WidgetInspectorStudioPage(
+                          initialCategory: _resolveInspectorCategory(item),
+                        ),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF06B6D4),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 10,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    'Buka Studio',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
