@@ -7,8 +7,9 @@ Struktur repositori terpadu yang menggabungkan seluruh materi pembelajaran, kata
 ## 📁 Struktur Modular
 
 ```
-lib/page_menu/flutter_learning_hub/
-├── flutter_learning_hub_page.dart         # Hub Navigasi Utama (3 Modul Terpadu)
+lib/
+├── flutter_learning_hub_page.dart         # Hub Navigasi Utama (Belajar, Jalur Karir, Kuis, Diskusi, Profil)
+├── main.dart                              # Entrypoint Flutter & Provider/LmsService Initialization
 ├── README.md                              # Dokumentasi Struktur Modul
 │
 ├── fundamentals/                          # 📘 1. Konsep & Materi Dasar Flutter
@@ -24,10 +25,23 @@ lib/page_menu/flutter_learning_hub/
 │   ├── pages/                             # Beranda katalog dasar & detail playground
 │   └── showcases/                         # 30+ Demo interaktif (Buttons, Layout, Input, Lists, dsb.)
 │
-└── catalog/                               # 🧪 3. Pro Widget Catalog & Advanced Lab
-    ├── models/                            # Model data widget pro & tag filters
-    ├── data/                              # 45+ Advanced widget registry
-    ├── pages/                             # Showcase playground & code viewer
-    ├── widgets/                           # Search bar, filter chips, catalog cards
-    └── showcases/                         # 45+ Showcase canggih (Animations, Biometrics, Charts, HUD)
+├── catalog/                               # 🧪 3. Pro Widget Catalog & Advanced Lab
+│   ├── models/                            # Model data widget pro & tag filters
+│   ├── data/                              # 45+ Advanced widget registry
+│   ├── pages/                             # Showcase playground & code viewer
+│   ├── widgets/                           # Search bar, filter chips, catalog cards
+│   └── showcases/                         # 45+ Showcase canggih (Animations, Biometrics, Charts, HUD)
+│
+└── lms/                                   # 🎓 Sistem LMS Terintegrasi
+    ├── constants/                         # AppDesignTokens & Anti-Slop Themes
+    ├── models/                            # UserProgress, LmsBadge, LearningTrack, Capstone
+    ├── services/                          # LmsProgressService & LmsStorage Engine
+    ├── data/                              # Career Tracks & 14 Badges Registry
+    ├── quiz/                              # Assessment Engine & Question Bank
+    ├── inspector/                         # Live Property Inspector Studio & Generator
+    ├── capstone/                          # Portfolio Lab (FinTech, E-Commerce, Health)
+    ├── certificate/                       # Digital Certificate of Completion Hub
+    ├── widgets/                           # Student Header Card, Notes BottomSheet, Track Selector
+    └── pages/                             # Career Tracks Hub, Student Profile & Discussions
 ```
+
