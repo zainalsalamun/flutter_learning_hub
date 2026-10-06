@@ -5,6 +5,7 @@ import '../models/lesson_item.dart';
 import '../widgets/formatted_markdown_text.dart';
 import '../../lms/services/lms_progress_service.dart';
 import '../../lms/widgets/lesson_notes_bottom_sheet.dart';
+import '../sandbox/pages/lesson_code_sandbox_page.dart';
 
 class LessonDetailPage extends StatefulWidget {
   final LessonItem lesson;
@@ -544,11 +545,50 @@ class _LessonDetailPageState extends State<LessonDetailPage> {
                     ),
                     child: Row(
                       children: [
-                        const Text(
-                          'Contoh Kode Dart',
-                          style: TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold),
+                        const Expanded(
+                          child: Text(
+                            'Contoh Kode Dart',
+                            style: TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                        const Spacer(),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(6),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => LessonCodeSandboxPage(
+                                  initialLesson: widget.lesson,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            margin: const EdgeInsets.only(right: 8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF02569B).withValues(alpha: 0.35),
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(color: const Color(0xFF02569B).withValues(alpha: 0.6), width: 1),
+                            ),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.terminal_rounded, size: 13, color: Color(0xFF38BDF8)),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Coba di Sandbox',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF38BDF8),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         IconButton(
                           icon: const Icon(Icons.copy_rounded, size: 16, color: Colors.white70),
                           tooltip: 'Salin Kode',
