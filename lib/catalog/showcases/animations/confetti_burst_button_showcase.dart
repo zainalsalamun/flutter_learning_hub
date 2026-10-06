@@ -40,7 +40,7 @@ class _ConfettiBurstButtonShowcaseState
           ),
           const SizedBox(height: 24),
           ConfettiBurstButton(
-            text: 'Complete Challenge ⭐',
+            text: 'Complete Challenge',
             gradient: const LinearGradient(
               colors: [Color(0xFF6366F1), Color(0xFFEC4899)],
             ),

@@ -350,9 +350,11 @@ class _CourierDeliveryRouteTrackerShowcaseState
                               fontSize: 14,
                             ),
                           ),
-                          SizedBox(width: 6),
-                          Text(
-                            '⭐ 4.9',
+                          const SizedBox(width: 6),
+                          const Icon(Icons.star_rounded, color: Colors.amber, size: 14),
+                          const SizedBox(width: 2),
+                          const Text(
+                            '4.9',
                             style: TextStyle(
                               color: Colors.amber,
                               fontSize: 12,

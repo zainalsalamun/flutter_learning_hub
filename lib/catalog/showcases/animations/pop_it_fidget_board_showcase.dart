@@ -363,14 +363,27 @@ class _PopItFidgetBoardShowcaseState extends State<PopItFidgetBoardShowcase>
                             color: _timerRunning ? Colors.amber : Colors.grey,
                           ),
                         ),
-                        child: Text(
-                          '⏱ ${(_elapsedMilliseconds / 1000).toStringAsFixed(1)}s',
-                          style: TextStyle(
-                            color:
-                                _timerRunning ? Colors.amber : Colors.white70,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.timer_outlined,
+                              size: 14,
+                              color:
+                                  _timerRunning ? Colors.amber : Colors.white70,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${(_elapsedMilliseconds / 1000).toStringAsFixed(1)}s',
+                              style: TextStyle(
+                                color: _timerRunning
+                                    ? Colors.amber
+                                    : Colors.white70,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                   ],

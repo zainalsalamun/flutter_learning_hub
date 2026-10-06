@@ -12,7 +12,7 @@ class SlotMachineSpinnerShowcase extends StatefulWidget {
 
 class _SlotMachineSpinnerShowcaseState extends State<SlotMachineSpinnerShowcase>
     with SingleTickerProviderStateMixin {
-  final List<String> _symbols = ['7⃣', '', '', '', '', '⭐', ''];
+  final List<String> _symbols = ['7', 'BAR', 'BELL', 'CHERRY', 'PLUM', 'STAR', 'WILD'];
 
   int _reelIndex1 = 0;
   int _reelIndex2 = 0;
@@ -134,13 +134,13 @@ class _SlotMachineSpinnerShowcaseState extends State<SlotMachineSpinnerShowcase>
         // TRIPLE JACKPOT
         final win = _betAmount * 20;
         _coinBalance += win;
-        _gameMessage = ' JACKPOT! Menang +$win Koin!';
+        _gameMessage = 'JACKPOT! Menang +$win Koin!';
         _messageColor = const Color(0xFF10B981);
       } else if (sym1 == sym2 || sym2 == sym3 || sym1 == sym3) {
         // DOUBLE MATCH
         final win = _betAmount * 3;
         _coinBalance += win;
-        _gameMessage = '⭐ Keren! Cocok 2 Simbol (+ $win Koin)';
+        _gameMessage = 'Keren! Cocok 2 Simbol (+ $win Koin)';
         _messageColor = const Color(0xFF38BDF8);
       } else {
         _gameMessage = 'Coba lagi! Semoga beruntung di putaran berikutnya.';

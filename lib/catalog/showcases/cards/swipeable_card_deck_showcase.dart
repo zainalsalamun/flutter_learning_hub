@@ -195,13 +195,13 @@ class _SwipeableCardDeckShowcaseState extends State<SwipeableCardDeckShowcase>
           _flyAnimation = null;
 
           if (isSuperLike) {
-            _lastActionText = '⭐ SUPER LIKED ${removed.name}!';
+            _lastActionText = 'SUPER LIKED ${removed.name}';
             _lastActionColor = const Color(0xFF38BDF8);
           } else if (isLike) {
-            _lastActionText = ' LIKED ${removed.name}!';
+            _lastActionText = 'LIKED ${removed.name}';
             _lastActionColor = const Color(0xFF4ADE80);
           } else {
-            _lastActionText = ' PASSED ${removed.name}';
+            _lastActionText = 'PASSED ${removed.name}';
             _lastActionColor = const Color(0xFFF87171);
           }
         });
@@ -500,7 +500,7 @@ class _SwipeableCardDeckShowcaseState extends State<SwipeableCardDeckShowcase>
                             ),
                             SizedBox(width: 6),
                             Text(
-                              'SUPER LIKE ⭐',
+                              'SUPER LIKE',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,

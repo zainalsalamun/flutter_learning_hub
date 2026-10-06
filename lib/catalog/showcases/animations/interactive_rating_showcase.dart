@@ -11,17 +11,39 @@ class InteractiveRatingShowcase extends StatefulWidget {
 class _InteractiveRatingShowcaseState extends State<InteractiveRatingShowcase> {
   int _rating = 4;
 
-  final Map<int, Map<String, String>> _ratingFeelings = {
-    1: {'emoji': '', 'text': 'Terrible experience'},
-    2: {'emoji': '', 'text': 'Needs improvement'},
-    3: {'emoji': '', 'text': 'Average / Okay'},
-    4: {'emoji': '', 'text': 'Great experience!'},
-    5: {'emoji': '', 'text': 'Absolutely Fantastic!'},
+  final Map<int, (IconData, Color, String)> _ratingFeelings = {
+    1: (
+      Icons.sentiment_very_dissatisfied_rounded,
+      const Color(0xFFEF4444),
+      'Terrible experience',
+    ),
+    2: (
+      Icons.sentiment_dissatisfied_rounded,
+      const Color(0xFFF97316),
+      'Needs improvement',
+    ),
+    3: (
+      Icons.sentiment_neutral_rounded,
+      const Color(0xFFF59E0B),
+      'Average / Okay',
+    ),
+    4: (
+      Icons.sentiment_satisfied_rounded,
+      const Color(0xFF10B981),
+      'Great experience!',
+    ),
+    5: (
+      Icons.sentiment_very_satisfied_rounded,
+      const Color(0xFF059669),
+      'Absolutely Fantastic!',
+    ),
   };
 
   @override
   Widget build(BuildContext context) {
-    final feeling = _ratingFeelings[_rating] ?? {'emoji': '⭐', 'text': ''};
+    final (sentimentIcon, sentimentColor, sentimentText) =
+        _ratingFeelings[_rating] ??
+            (Icons.star_rounded, Colors.amber, 'Rating');
 
     return Center(
       child: Container(
@@ -44,17 +66,18 @@ class _InteractiveRatingShowcaseState extends State<InteractiveRatingShowcase> {
               duration: const Duration(milliseconds: 300),
               transitionBuilder:
                   (child, anim) => ScaleTransition(scale: anim, child: child),
-              child: Text(
-                feeling['emoji']!,
-                key: ValueKey('emoji_$_rating'),
-                style: const TextStyle(fontSize: 48),
+              child: Icon(
+                sentimentIcon,
+                key: ValueKey('icon_$_rating'),
+                size: 54,
+                color: sentimentColor,
               ),
             ),
             const SizedBox(height: 8),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
               child: Text(
-                feeling['text']!,
+                sentimentText,
                 key: ValueKey('text_$_rating'),
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
