@@ -47,6 +47,8 @@ class LessonItem {
   final List<String> keyTakeaways;
   final Widget Function(BuildContext context)? visualizerBuilder;
   final QuizQuestion? quiz;
+  final int? _xpReward;
+  final List<String>? _codeSnippets;
 
   const LessonItem({
     required this.id,
@@ -62,5 +64,19 @@ class LessonItem {
     required this.keyTakeaways,
     this.visualizerBuilder,
     this.quiz,
-  });
+    int? xpReward,
+    List<String>? codeSnippets,
+  })  : _xpReward = xpReward,
+        _codeSnippets = codeSnippets;
+
+  /// Calculated or explicitly defined XP Reward for completing the lesson
+  int get xpReward => _xpReward ?? (readTimeMinutes * 15 + 50);
+
+  /// List of code snippets extracted from sections or custom list
+  List<String> get codeSnippets =>
+      _codeSnippets ??
+      sections
+          .where((s) => s.codeSnippet != null && s.codeSnippet!.trim().isNotEmpty)
+          .map((s) => s.codeSnippet!)
+          .toList();
 }
