@@ -169,6 +169,14 @@ import '../showcases/animations/crypto_fear_greed_meter_showcase.dart';
 import '../showcases/cards/staking_yield_calculator_showcase.dart';
 import '../showcases/animations/amm_liquidity_pool_curve_showcase.dart';
 
+// Real-World App Components Showcases
+import '../showcases/realworld/movie_card_showcase.dart';
+import '../showcases/realworld/botanica_product_card_showcase.dart';
+import '../showcases/realworld/train_seat_selector_showcase.dart';
+import '../showcases/realworld/warga_kita_kas_card_showcase.dart';
+import '../showcases/realworld/velox_car_card_showcase.dart';
+import '../showcases/realworld/grocery_quantity_stepper_showcase.dart';
+
 class WidgetCatalogRegistry {
   static final List<WidgetItem> allWidgets = [
     // ------------------- BUTTONS -------------------
@@ -3460,6 +3468,178 @@ CustomPaint(
   ),
 )''',
       previewBuilder: (context) => const RegenBrakingGForceMatrixShowcase(),
+    ),
+
+    // ------------------- REAL-WORLD APP COMPONENTS -------------------
+    WidgetItem(
+      id: 'realworld_movie_card',
+      title: 'Movie Discovery Card & Watchlist',
+      description:
+          'Komponen kartu film interaktif dari Movie Discovery App dengan poster art, rating TMDB, genre tag, toggle bookmark watchlist instan, dan preview detail modal bottom sheet.',
+      category: WidgetCategory.realWorld,
+      difficulty: WidgetDifficulty.intermediate,
+      icon: Icons.movie_filter_rounded,
+      tags: [
+        'Movie App',
+        'TMDB',
+        'Streaming',
+        'Watchlist',
+        'Card',
+        'Modal Sheet',
+        'Real-World',
+      ],
+      usageTips:
+          'Gunakan ClipRRect pada poster film dan padukan dengan overlay rating chip serta aksi bookmark reactive.',
+      codeSnippet: '''
+MovieCard(
+  movie: movieItem,
+  onBookmarkToggle: (id) => watchlistBloc.add(ToggleWatchlistEvent(id)),
+  onTap: () => showMovieDetailSheet(context, movieItem),
+)''',
+      previewBuilder: (context) => const MovieCardShowcase(),
+    ),
+
+    WidgetItem(
+      id: 'realworld_botanica_product',
+      title: 'Botanica Beauty Product Card & Stepper',
+      description:
+          'Komponen produk kecantikan & skincare e-commerce dari Botanica Beauty App dengan badge diskon persentase, toggle favorit animasi, harga coret, dan stepper keranjang.',
+      category: WidgetCategory.realWorld,
+      difficulty: WidgetDifficulty.intermediate,
+      icon: Icons.spa_rounded,
+      tags: [
+        'E-Commerce',
+        'Botanica Beauty',
+        'Product Card',
+        'Discount',
+        'Cart Stepper',
+        'Organic Badge',
+        'Real-World',
+      ],
+      usageTips:
+          'Sajikan harga coret dengan TextDecoration.lineThrough dan hadirkan stepper jumlah produk yang responsif secara lokal.',
+      codeSnippet: '''
+BotanicaProductCard(
+  product: productItem,
+  quantityInCart: cartCount,
+  onQuantityChanged: (q) => cartProvider.updateQuantity(productItem.id, q),
+)''',
+      previewBuilder: (context) => const BotanicaProductCardShowcase(),
+    ),
+
+    WidgetItem(
+      id: 'realworld_train_seat_selector',
+      title: 'Train Coach 2x2 Seat Layout & Booking',
+      description:
+          'Layout denah pemilihan kursi kereta api 2x2 dari Queue Transit App dengan status kursi interaktif (Tersedia, Terisi, Dipilih), pemilih gerbong, dan kalkulasi pembayaran.',
+      category: WidgetCategory.realWorld,
+      difficulty: WidgetDifficulty.advanced,
+      icon: Icons.train_rounded,
+      tags: [
+        'Transit',
+        'Seat Selector',
+        'KAI',
+        'Queue App',
+        'Booking',
+        'Interactive Matrix',
+        'Real-World',
+      ],
+      usageTips:
+          'Pisahkan denah kursi dengan lorong tengah (A, B vs C, D) menggunakan baris Row dan pelihara set kursi terpilih dalam State.',
+      codeSnippet: '''
+TrainSeatSelector(
+  coach: activeCoach,
+  selectedSeats: selectedSeatCodes,
+  bookedSeats: bookedSeatCodes,
+  onSeatToggled: (seat) => toggleSeatSelection(seat),
+)''',
+      previewBuilder: (context) => const TrainSeatSelectorShowcase(),
+    ),
+
+    WidgetItem(
+      id: 'realworld_warga_kita_kas',
+      title: 'Warga Kita Kas & Jimpitan Digital Ledger',
+      description:
+          'Kartu transparansi kas warga desa dari Warga Kita App dengan saldo kas RT, ringkasan cashflow bulanan masuk/keluar, micro-ledger transaksi, dan tombol bayar iuran interaktif.',
+      category: WidgetCategory.realWorld,
+      difficulty: WidgetDifficulty.intermediate,
+      icon: Icons.account_balance_rounded,
+      tags: [
+        'Civic App',
+        'Warga Kita',
+        'Kas RT',
+        'Jimpitan',
+        'Finance Ledger',
+        'Card',
+        'Real-World',
+      ],
+      usageTips:
+          'Tampilkan ringkasan keuangan warga dengan kontras warna hijau (inflow) vs merah (outflow) demi kejelasan data.',
+      codeSnippet: '''
+WargaKitaKasCard(
+  rtName: 'RT 04 / RW 08',
+  balance: totalTreasuryBalance,
+  monthlyIncome: incomeAmount,
+  monthlyExpense: expenseAmount,
+  onPayDuesPressed: () => openPaymentGateway(context),
+)''',
+      previewBuilder: (context) => const WargaKitaKasCardShowcase(),
+    ),
+
+    WidgetItem(
+      id: 'realworld_velox_car_card',
+      title: 'Velox Mobility Car Rental Card',
+      description:
+          'Kartu armada sewa kendaraan modern dari Velox Rental App dengan spesifikasi transmisi/kursi/jarak tempuh, rating penyewa, harga sewa 24 jam, dan aksi seleksi unit.',
+      category: WidgetCategory.realWorld,
+      difficulty: WidgetDifficulty.intermediate,
+      icon: Icons.directions_car_filled_rounded,
+      tags: [
+        'Car Rental',
+        'Mobility',
+        'Velox',
+        'Vehicle Card',
+        'EV',
+        'Specs Pill',
+        'Real-World',
+      ],
+      usageTips:
+          'Gunakan spesifikasi kapsul (specs pill) horizontal untuk menampilkan kapasitas penumpang dan jenis transmisi secara ringkas.',
+      codeSnippet: '''
+VeloxCarCard(
+  vehicle: carItem,
+  isSelected: selectedVehicleId == carItem.id,
+  onSelect: () => selectVehicle(carItem),
+)''',
+      previewBuilder: (context) => const VeloxCarCardShowcase(),
+    ),
+
+    WidgetItem(
+      id: 'realworld_grocery_stepper',
+      title: 'Fresh Grocery Stepper & Cart Item',
+      description:
+          'Komponen item belanja e-grocery dari Fresh Grocery App dengan verifikasi asal kebun hidroponik, kontrol stepper jumlah barang responsif, dan checkout instan.',
+      category: WidgetCategory.realWorld,
+      difficulty: WidgetDifficulty.beginner,
+      icon: Icons.local_grocery_store_rounded,
+      tags: [
+        'Grocery',
+        'Cart Item',
+        'Stepper',
+        'E-Commerce',
+        'Produce',
+        'Subtotal',
+        'Real-World',
+      ],
+      usageTips:
+          'Gunakan transisi dinamis antara tombol "+ Beli" dan stepper counter (- N +) saat item dimasukkan ke dalam troli.',
+      codeSnippet: '''
+GroceryItemTile(
+  produce: groceryItem,
+  quantity: itemQuantity,
+  onQuantityChanged: (qty) => cartService.setQuantity(groceryItem.id, qty),
+)''',
+      previewBuilder: (context) => const GroceryQuantityStepperShowcase(),
     ),
   ];
 }
