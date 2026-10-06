@@ -41,6 +41,11 @@ enum WidgetCategory {
     title: 'Animations & Gestures',
     icon: Icons.animation_rounded,
     color: Color(0xFFEF4444),
+  ),
+  realWorld(
+    title: 'Real-World Apps',
+    icon: Icons.storefront_rounded,
+    color: Color(0xFF0284C7),
   );
 
   final String title;
