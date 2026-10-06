@@ -13,7 +13,19 @@ enum FundamentalModule {
     color: Color(0xFF0284C7),
     description: 'Tipe data, Null Safety, OOP, Mixin, Extensions',
   ),
+  dartOop(
+    title: 'Dart & OOP',
+    icon: Icons.code_rounded,
+    color: Color(0xFF0284C7),
+    description: 'Tipe data, Null Safety, OOP, Mixin, Extensions',
+  ),
   architecture(
+    title: 'Widget Tree & Core',
+    icon: Icons.account_tree_rounded,
+    color: Color(0xFF10B981),
+    description: 'Widget, Element, RenderObject, BuildContext',
+  ),
+  widgetTree(
     title: 'Widget Tree & Core',
     icon: Icons.account_tree_rounded,
     color: Color(0xFF10B981),
@@ -25,8 +37,20 @@ enum FundamentalModule {
     color: Color(0xFFF59E0B),
     description: 'Stateless vs Stateful, alur initState hingga dispose',
   ),
+  stateLifecycle(
+    title: 'Widget Lifecycle & State',
+    icon: Icons.sync_rounded,
+    color: Color(0xFFF59E0B),
+    description: 'Stateless vs Stateful, alur initState hingga dispose',
+  ),
   layoutRules(
     title: 'Aturan Layout',
+    icon: Icons.view_quilt_rounded,
+    color: Color(0xFF8B5CF6),
+    description: 'Constraints down, sizes up, bounded vs unbounded',
+  ),
+  layoutConstraints(
+    title: 'Layout & Constraints',
     icon: Icons.view_quilt_rounded,
     color: Color(0xFF8B5CF6),
     description: 'Constraints down, sizes up, bounded vs unbounded',
@@ -61,6 +85,12 @@ enum FundamentalModule {
     color: Color(0xFF4F46E5),
     description: 'Folder structure, optimasi performa const, DevTools',
   ),
+  architectureBestPractices(
+    title: 'Architecture & Best Practices',
+    icon: Icons.verified_rounded,
+    color: Color(0xFF4F46E5),
+    description: 'Folder structure, optimasi performa const, DevTools',
+  ),
   networkingApi(
     title: 'REST API & Dio',
     icon: Icons.http_rounded,
@@ -81,6 +111,12 @@ enum FundamentalModule {
   ),
   animationsCustomPainter(
     title: 'Animasi & Canvas',
+    icon: Icons.brush_rounded,
+    color: Color(0xFFDB2777),
+    description: 'AnimationController, TweenSequence, CustomPainter Canvas',
+  ),
+  renderCustomPainter(
+    title: 'Render & Custom Painter',
     icon: Icons.brush_rounded,
     color: Color(0xFFDB2777),
     description: 'AnimationController, TweenSequence, CustomPainter Canvas',
