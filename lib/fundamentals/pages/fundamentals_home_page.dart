@@ -16,6 +16,9 @@ import '../data/lessons_repository.dart';
 import '../models/fundamental_module.dart';
 import '../models/lesson_item.dart';
 import '../sandbox/pages/lesson_code_sandbox_page.dart';
+import '../../lms/recipes/pages/quick_recipes_hub_page.dart';
+import '../../lms/search/pages/global_spotlight_search_page.dart';
+import '../../lms/flashcards/pages/flashcards_hub_page.dart';
 import 'lesson_detail_page.dart';
 
 class FundamentalsHomePage extends StatefulWidget {
@@ -88,7 +91,7 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
         elevation: 0,
         scrolledUnderElevation: 0.5,
         automaticallyImplyLeading: false,
-        titleSpacing: 16,
+        titleSpacing: 12,
         title: Row(
           children: [
             Container(
@@ -105,31 +108,120 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
                 size: 20,
               ),
             ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Flutter LMS & Mastery',
-                  style: AppTypography.headingTitle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Flutter LMS & Mastery',
+                    style: AppTypography.headingTitle(
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                Text(
-                  'Kurikulum Profesional',
-                  style: AppTypography.bodyText(
-                    fontSize: 11,
-                    color: AppColors.textSecondary,
+                  Text(
+                    'Kurikulum Profesional',
+                    style: AppTypography.bodyText(
+                      fontSize: 10.5,
+                      color: AppColors.textSecondary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
         actions: [
+          // Global Spotlight Search Action
+          IconButton(
+            constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
+            padding: const EdgeInsets.all(5),
+            visualDensity: VisualDensity.compact,
+            icon: const Icon(
+              Icons.search_rounded,
+              color: AppColors.textPrimary,
+              size: 21,
+            ),
+            tooltip: 'Global Spotlight Search',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const GlobalSpotlightSearchPage(),
+                ),
+              );
+            },
+          ),
+          // More Tools Popup Menu (Quick Recipes & Flashcards)
+          PopupMenuButton<String>(
+            icon: const Icon(
+              Icons.more_vert_rounded,
+              color: AppColors.textPrimary,
+              size: 21,
+            ),
+            padding: EdgeInsets.zero,
+            tooltip: 'Fitur Tambahan',
+            onSelected: (val) {
+              if (val == 'recipes') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const QuickRecipesHubPage(),
+                  ),
+                );
+              } else if (val == 'flashcards') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const FlashcardsHubPage(),
+                  ),
+                );
+              }
+            },
+            itemBuilder: (_) => [
+              const PopupMenuItem(
+                value: 'recipes',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.code_rounded,
+                      size: 18,
+                      color: Color(0xFF0D9488),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'Resep Kode & Cheat Sheet',
+                      style: TextStyle(fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'flashcards',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.style_rounded,
+                      size: 18,
+                      color: Color(0xFF8B5CF6),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'Flashcard Wawancara',
+                      style: TextStyle(fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
           // Student Level & XP Pill
           InkWell(
             onTap: () {
@@ -142,8 +234,8 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
             },
             borderRadius: BorderRadius.circular(AppRadius.full),
             child: Container(
-              margin: const EdgeInsets.only(right: 16),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              margin: const EdgeInsets.only(right: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
                 color: AppColors.surface,
                 borderRadius: BorderRadius.circular(AppRadius.full),
@@ -154,16 +246,16 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
                 children: [
                   const Icon(
                     Icons.star_rounded,
-                    size: 15,
+                    size: 14,
                     color: Color(0xFFF59E0B),
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: 3),
                   Text(
                     'Lv.${_lmsService.currentLevel} • ${_lmsService.earnedXp} XP',
                     style: const TextStyle(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.w700,
-                      fontSize: 11.5,
+                      fontSize: 10.5,
                     ),
                   ),
                 ],
@@ -208,12 +300,16 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
                         color: AppColors.primary,
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        'Katalog Widget Praktik',
-                        style: AppTypography.headingTitle(
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.textPrimary,
+                      Expanded(
+                        child: Text(
+                          'Katalog Widget Praktik',
+                          style: AppTypography.headingTitle(
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -247,35 +343,41 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
-                                      padding: const EdgeInsets.all(8),
+                                      padding: const EdgeInsets.all(7),
                                       decoration: BoxDecoration(
                                         color: const Color(0xFFF0F9FF),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: const Icon(
                                         Icons.flutter_dash_rounded,
-                                        size: 18,
+                                        size: 16,
                                         color: Color(0xFF0284C7),
                                       ),
                                     ),
-                                    const Spacer(),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 6,
-                                        vertical: 2,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFF1F5F9),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      child: const Text(
-                                        '41 Widget',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w700,
-                                          color: Color(0xFF475569),
+                                    Flexible(
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 6,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFF1F5F9),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                        child: const Text(
+                                          '41 Widget',
+                                          style: TextStyle(
+                                            fontSize: 9.5,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color(0xFF475569),
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ),
@@ -332,35 +434,41 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
-                                      padding: const EdgeInsets.all(8),
+                                      padding: const EdgeInsets.all(7),
                                       decoration: BoxDecoration(
                                         color: const Color(0xFFFAF5FF),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: const Icon(
                                         Icons.auto_awesome_motion_rounded,
-                                        size: 18,
+                                        size: 16,
                                         color: Color(0xFF7C3AED),
                                       ),
                                     ),
-                                    const Spacer(),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 6,
-                                        vertical: 2,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFF1F5F9),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      child: const Text(
-                                        '116 Lab Pro',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w700,
-                                          color: Color(0xFF475569),
+                                    Flexible(
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 6,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFF1F5F9),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                        child: const Text(
+                                          '116 Lab Pro',
+                                          style: TextStyle(
+                                            fontSize: 9.5,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color(0xFF475569),
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ),
@@ -412,12 +520,16 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
                         color: AppColors.primary,
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        'Akses Cepat',
-                        style: AppTypography.headingTitle(
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.textPrimary,
+                      Expanded(
+                        child: Text(
+                          'Akses Cepat',
+                          style: AppTypography.headingTitle(
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -439,7 +551,7 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
                           },
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 6),
                       Expanded(
                         child: _buildQuickAccessCard(
                           title: 'Inspector',
@@ -455,7 +567,7 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
                           },
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 6),
                       Expanded(
                         child: _buildQuickAccessCard(
                           title: 'Capstone',
@@ -471,7 +583,7 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
                           },
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 6),
                       Expanded(
                         child: _buildQuickAccessCard(
                           title: 'Sertifikasi',
@@ -535,11 +647,15 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
                           children: [
                             Row(
                               children: [
-                                Text(
-                                  'Bug Hunt Lab',
-                                  style: AppTypography.headingTitle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700,
+                                Flexible(
+                                  child: Text(
+                                    'Bug Hunt Lab',
+                                    style: AppTypography.headingTitle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                                 const SizedBox(width: 6),
@@ -628,11 +744,15 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
                           children: [
                             Row(
                               children: [
-                                Text(
-                                  'Interactive Code Sandbox',
-                                  style: AppTypography.headingTitle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700,
+                                Flexible(
+                                  child: Text(
+                                    'Interactive Code Sandbox',
+                                    style: AppTypography.headingTitle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                                 const SizedBox(width: 6),
@@ -681,7 +801,205 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
             ),
           ),
 
-          // 6. Search Bar
+          // 6. Quick Recipe Cheat Sheet Callout Card
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 6),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const QuickRecipesHubPage(),
+                    ),
+                  );
+                },
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(AppRadius.md),
+                    border: Border.all(color: AppColors.borderSubtle, width: 1),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF0FDF4),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Icons.code_rounded,
+                          color: Color(0xFF0D9488),
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    'Quick Recipes & Cheat Sheet',
+                                    style: AppTypography.headingTitle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 1.5,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFCCFBF1),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: const Text(
+                                    'Pola Produksi',
+                                    style: TextStyle(
+                                      fontSize: 9.5,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF0F766E),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              '8 kategori resep siap pakai: Dart 3, Dio Interceptor, Riverpod, Canvas & Overflow fix',
+                              style: AppTypography.bodyText(
+                                fontSize: 11.5,
+                                color: AppColors.textSecondary,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(
+                        Icons.chevron_right_rounded,
+                        size: 18,
+                        color: Color(0xFF94A3B8),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // 7. Flashcard Interview Callout Card
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 6),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const FlashcardsHubPage(),
+                    ),
+                  );
+                },
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(AppRadius.md),
+                    border: Border.all(color: AppColors.borderSubtle, width: 1),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF5F3FF),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Icons.style_rounded,
+                          color: Color(0xFF7C3AED),
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    'Flashcard Wawancara Kerja',
+                                    style: AppTypography.headingTitle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 1.5,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFEDE9FE),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: const Text(
+                                    'Spaced Repetition',
+                                    style: TextStyle(
+                                      fontSize: 9.5,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF6D28D9),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Review 15 kartu pintar teknis Flutter, arsitektur engine, dan tips interviewer',
+                              style: AppTypography.bodyText(
+                                fontSize: 11.5,
+                                color: AppColors.textSecondary,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(
+                        Icons.chevron_right_rounded,
+                        size: 18,
+                        color: Color(0xFF94A3B8),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // 8. Search Bar
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 6, 16, 8),
@@ -715,7 +1033,19 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
                               setState(() => _searchQuery = '');
                             },
                           )
-                        : null,
+                        : IconButton(
+                            icon: const Icon(Icons.tune_rounded, size: 18),
+                            tooltip: 'Spotlight Search Global',
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      const GlobalSpotlightSearchPage(),
+                                ),
+                              );
+                            },
+                          ),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(
                       vertical: 12,
@@ -800,16 +1130,20 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
               child: Row(
                 children: [
-                  Text(
-                    'MODUL TERSEDIA (${_selectedModule == FundamentalModule.all ? "SEMUA MODUL" : _selectedModule.title.toUpperCase()})',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.textPrimary,
-                      letterSpacing: 0.4,
+                  Expanded(
+                    child: Text(
+                      'MODUL TERSEDIA (${_selectedModule == FundamentalModule.all ? "SEMUA MODUL" : _selectedModule.title.toUpperCase()})',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.textPrimary,
+                        letterSpacing: 0.4,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const Spacer(),
+                  const SizedBox(width: 8),
                   Text(
                     'Total ${filtered.length} Materi',
                     style: const TextStyle(
@@ -876,7 +1210,7 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(AppRadius.md),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 2),
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadius.md),
@@ -976,16 +1310,20 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    lesson.module.title.toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.primary,
-                      letterSpacing: 0.3,
+                  Expanded(
+                    child: Text(
+                      lesson.module.title.toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.primary,
+                        letterSpacing: 0.3,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const Spacer(),
+                  const SizedBox(width: 8),
                   IconButton(
                     icon: Icon(
                       isBookmarked
@@ -1032,7 +1370,10 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
               const SizedBox(height: 12),
 
               // Footer Meta Row: Read time, XP Pill, Content Type tag
-              Row(
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Row(
                     mainAxisSize: MainAxisSize.min,
@@ -1053,7 +1394,6 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
                       ),
                     ],
                   ),
-                  const SizedBox(width: 10),
 
                   // XP Reward Pill
                   Container(
@@ -1099,7 +1439,6 @@ class _FundamentalsHomePageState extends State<FundamentalsHomePage> {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 8),
 
                   // Content Type Tag (Diagram / Code Lab / Teori & Praktek)
                   Container(
