@@ -85,23 +85,29 @@ class _StackPositionedBasicShowcaseState
                     ],
                   ),
                   alignment: Alignment.center,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.pin_drop_rounded,
-                        color: Colors.white,
-                        size: 20,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.pin_drop_rounded,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                          Text(
+                            '(${_top.toInt()}, ${_left.toInt()})',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        '(${_top.toInt()}, ${_left.toInt()})',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 9,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
