@@ -5,6 +5,8 @@ class UserProgress {
   final Set<String> bookmarkedLessonIds;
   final Set<String> bookmarkedWidgetIds;
   final Set<String> completedCapstoneIds;
+  final Set<String> completedBugChallengeIds;
+  final Set<String> masteredFlashcardIds;
   final Map<String, String> lessonNotes;
   final Map<String, int> quizScores;
   final int earnedXp;
@@ -19,6 +21,8 @@ class UserProgress {
     this.bookmarkedLessonIds = const {},
     this.bookmarkedWidgetIds = const {},
     this.completedCapstoneIds = const {},
+    this.completedBugChallengeIds = const {},
+    this.masteredFlashcardIds = const {},
     this.lessonNotes = const {},
     this.quizScores = const {},
     this.earnedXp = 0,
@@ -72,6 +76,8 @@ class UserProgress {
     Set<String>? bookmarkedLessonIds,
     Set<String>? bookmarkedWidgetIds,
     Set<String>? completedCapstoneIds,
+    Set<String>? completedBugChallengeIds,
+    Set<String>? masteredFlashcardIds,
     Map<String, String>? lessonNotes,
     Map<String, int>? quizScores,
     int? earnedXp,
@@ -86,6 +92,9 @@ class UserProgress {
       bookmarkedLessonIds: bookmarkedLessonIds ?? this.bookmarkedLessonIds,
       bookmarkedWidgetIds: bookmarkedWidgetIds ?? this.bookmarkedWidgetIds,
       completedCapstoneIds: completedCapstoneIds ?? this.completedCapstoneIds,
+      completedBugChallengeIds:
+          completedBugChallengeIds ?? this.completedBugChallengeIds,
+      masteredFlashcardIds: masteredFlashcardIds ?? this.masteredFlashcardIds,
       lessonNotes: lessonNotes ?? this.lessonNotes,
       quizScores: quizScores ?? this.quizScores,
       earnedXp: earnedXp ?? this.earnedXp,
@@ -103,6 +112,8 @@ class UserProgress {
       'bookmarkedLessonIds': bookmarkedLessonIds.toList(),
       'bookmarkedWidgetIds': bookmarkedWidgetIds.toList(),
       'completedCapstoneIds': completedCapstoneIds.toList(),
+      'completedBugChallengeIds': completedBugChallengeIds.toList(),
+      'masteredFlashcardIds': masteredFlashcardIds.toList(),
       'lessonNotes': lessonNotes,
       'quizScores': quizScores,
       'earnedXp': earnedXp,
@@ -120,6 +131,10 @@ class UserProgress {
       bookmarkedLessonIds: Set<String>.from(map['bookmarkedLessonIds'] ?? []),
       bookmarkedWidgetIds: Set<String>.from(map['bookmarkedWidgetIds'] ?? []),
       completedCapstoneIds: Set<String>.from(map['completedCapstoneIds'] ?? []),
+      completedBugChallengeIds:
+          Set<String>.from(map['completedBugChallengeIds'] ?? []),
+      masteredFlashcardIds:
+          Set<String>.from(map['masteredFlashcardIds'] ?? []),
       lessonNotes: Map<String, String>.from(map['lessonNotes'] ?? {}),
       quizScores: Map<String, int>.from(map['quizScores'] ?? {}),
       earnedXp: (map['earnedXp'] as num?)?.toInt() ?? 0,
