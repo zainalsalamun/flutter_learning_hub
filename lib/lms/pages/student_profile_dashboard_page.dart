@@ -11,7 +11,6 @@ import '../certificate/pages/certificate_view_page.dart';
 import '../data/lms_badges_data.dart';
 import '../models/lms_badge.dart';
 import '../quiz/data/assessments_data.dart';
-import '../quiz/models/assessment_model.dart';
 import '../quiz/pages/interactive_assessment_play_page.dart';
 import '../services/lms_progress_service.dart';
 import '../widgets/lesson_notes_bottom_sheet.dart';
@@ -206,6 +205,24 @@ class _StudentProfileDashboardPageState
                       iconColor: const Color(0xFFFBBF24),
                       title: 'Lencana',
                       value: '$unlockedBadges / ${LmsBadgesData.allBadges.length}',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    _buildStatCard(
+                      icon: Icons.pest_control_rounded,
+                      iconColor: const Color(0xFFEF4444),
+                      title: 'Bug Hunt',
+                      value: '${_lmsService.completedBugChallengesCount} Kasus',
+                    ),
+                    const SizedBox(width: 6),
+                    _buildStatCard(
+                      icon: Icons.rocket_launch_rounded,
+                      iconColor: const Color(0xFF0D9488),
+                      title: 'Capstone',
+                      value: '${_lmsService.progress.completedCapstoneIds.length} Proyek',
                     ),
                   ],
                 ),
