@@ -5,7 +5,6 @@ import '../../fundamentals/models/lesson_item.dart';
 import '../data/learning_tracks_data.dart';
 import '../data/lms_badges_data.dart';
 import '../models/learning_track.dart';
-import '../models/lms_badge.dart';
 import '../models/user_progress.dart';
 import '../quiz/data/assessments_data.dart';
 import '../quiz/models/assessment_model.dart';
@@ -302,6 +301,30 @@ class LmsProgressService extends ChangeNotifier {
   }
 
   // =========================================================================
+  // COMMUNITY DISCUSSION ACTIVITY
+  // =========================================================================
+
+  Future<void> recordCommunityDiscussionCreated({int bonusXp = 30}) async {
+    final xp = _progress.earnedXp + bonusXp;
+    _progress = _progress.copyWith(
+      earnedXp: xp,
+      lastActiveDate: DateTime.now(),
+    );
+    await _storage.saveProgress(_progress);
+    notifyListeners();
+  }
+
+  Future<void> recordCommunityReplyCreated({int bonusXp = 15}) async {
+    final xp = _progress.earnedXp + bonusXp;
+    _progress = _progress.copyWith(
+      earnedXp: xp,
+      lastActiveDate: DateTime.now(),
+    );
+    await _storage.saveProgress(_progress);
+    notifyListeners();
+  }
+
+  // =========================================================================
   // STUDENT PROFILE & CAPSTONE
   // =========================================================================
 
@@ -337,6 +360,78 @@ class LmsProgressService extends ChangeNotifier {
       completedCapstoneIds: current,
       earnedXp: xp,
       lastActiveDate: DateTime.now(),
+    );
+
+    await _storage.saveProgress(_progress);
+    notifyListeners();
+  }
+
+  // =========================================================================
+  // BUG HUNT LAB CHALLENGES
+  // =========================================================================
+
+  int get completedBugChallengesCount =>
+      _progress.completedBugChallengeIds.length;
+
+  bool isBugChallengeCompleted(String challengeId) =>
+      _progress.completedBugChallengeIds.contains(challengeId);
+
+  Future<void> completeBugChallenge(String challengeId, int rewardXp) async {
+    final alreadyDone = isBugChallengeCompleted(challengeId);
+    final current = Set<String>.from(_progress.completedBugChallengeIds);
+    current.add(challengeId);
+
+    int xp = _progress.earnedXp;
+    if (!alreadyDone) {
+      xp += rewardXp;
+    }
+
+    _progress = _progress.copyWith(
+      completedBugChallengeIds: current,
+      earnedXp: xp,
+      lastActiveDate: DateTime.now(),
+    );
+
+    await _storage.saveProgress(_progress);
+    notifyListeners();
+  }
+
+  // =========================================================================
+  // FLASHCARD INTERVIEW MASTERY
+  // =========================================================================
+
+  int get masteredFlashcardsCount => _progress.masteredFlashcardIds.length;
+
+  bool isFlashcardMastered(String cardId) =>
+      _progress.masteredFlashcardIds.contains(cardId);
+
+  Future<void> masterFlashcard(String cardId, {int rewardXp = 15}) async {
+    final alreadyMastered = isFlashcardMastered(cardId);
+    final current = Set<String>.from(_progress.masteredFlashcardIds);
+    current.add(cardId);
+
+    int xp = _progress.earnedXp;
+    if (!alreadyMastered) {
+      xp += rewardXp;
+    }
+
+    _progress = _progress.copyWith(
+      masteredFlashcardIds: current,
+      earnedXp: xp,
+      lastActiveDate: DateTime.now(),
+    );
+
+    await _storage.saveProgress(_progress);
+    notifyListeners();
+  }
+
+  Future<void> unmasterFlashcard(String cardId) async {
+    final current = Set<String>.from(_progress.masteredFlashcardIds);
+    if (!current.contains(cardId)) return;
+    current.remove(cardId);
+
+    _progress = _progress.copyWith(
+      masteredFlashcardIds: current,
     );
 
     await _storage.saveProgress(_progress);
@@ -475,6 +570,10 @@ class LmsProgressService extends ChangeNotifier {
         return _progress.completedCapstoneIds.isNotEmpty;
       case 'certified_engineer':
         return _progress.certificateId != null;
+      case 'bug_hunter':
+        return completedBugChallengesCount >= 1;
+      case 'flashcard_master':
+        return masteredFlashcardsCount >= 10;
       case 'flutter_grandmaster':
         return completedLessonsCount >= totalLessonsCount &&
             totalLessonsCount > 0;
