@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../constants/app_design_tokens.dart';
 import '../data/learning_tracks_data.dart';
 import '../models/learning_track.dart';
+import '../pages/career_tracks_hub_page.dart';
 import '../services/lms_progress_service.dart';
 
 class LearningTrackSelector extends StatelessWidget {
@@ -35,23 +36,52 @@ class LearningTrackSelector extends StatelessWidget {
                   color: AppColors.primary,
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  'Jalur Pembelajaran (Career Tracks)',
-                  style: AppTypography.headingTitle(
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                Expanded(
+                  child: Text(
+                    'Jalur Pembelajaran (Career Tracks)',
+                    style: AppTypography.headingTitle(
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const Spacer(),
-                GestureDetector(
-                  onTap: () => onTrackSelected(null),
-                  child: Text(
-                    'Lihat Semua',
-                    style: AppTypography.labelText(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
+                const SizedBox(width: 8),
+                InkWell(
+                  onTap: () async {
+                    final selected = await Navigator.push<LearningTrack?>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const CareerTracksHubPage(),
+                      ),
+                    );
+                    if (selected != null) {
+                      onTrackSelected(selected);
+                    }
+                  },
+                  borderRadius: BorderRadius.circular(6),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Lihat Semua',
+                          style: AppTypography.labelText(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                        const SizedBox(width: 2),
+                        const Icon(
+                          Icons.chevron_right_rounded,
+                          size: 16,
+                          color: AppColors.primary,
+                        ),
+                      ],
                     ),
                   ),
                 ),
