@@ -192,13 +192,18 @@ class LmsStudentHeaderCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Progress kurikulum',
-                style: AppTypography.bodyText(
-                  fontSize: 11,
-                  color: AppColors.textSecondary,
+              Expanded(
+                child: Text(
+                  'Progress kurikulum',
+                  style: AppTypography.bodyText(
+                    fontSize: 11,
+                    color: AppColors.textSecondary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              const SizedBox(width: 8),
               Text(
                 '$xpNeeded XP ke Lv.${level + 1}',
                 style: AppTypography.bodyText(
@@ -215,7 +220,7 @@ class LmsStudentHeaderCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: FilledButton.icon(
+                child: FilledButton(
                   onPressed: () {
                     final nextLesson = lmsService.getNextRecommendedLesson();
                     if (nextLesson != null) {
@@ -227,29 +232,43 @@ class LmsStudentHeaderCard extends StatelessWidget {
                       );
                     }
                   },
-                  icon: const Icon(
-                    Icons.play_arrow_rounded,
-                    size: 18,
-                    color: Colors.white,
-                  ),
-                  label: const Text(
-                    'Lanjutkan Belajar',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
                   style: FilledButton.styleFrom(
                     backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 10,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.play_arrow_rounded,
+                        size: 18,
+                        color: Colors.white,
+                      ),
+                      SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          'Lanjutkan',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               OutlinedButton.icon(
                 onPressed: () {
                   Navigator.push(
@@ -276,7 +295,7 @@ class LmsStudentHeaderCard extends StatelessWidget {
                   side: const BorderSide(color: AppColors.borderSubtle),
                   backgroundColor: AppColors.surface,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
+                    horizontal: 8,
                     vertical: 10,
                   ),
                   shape: RoundedRectangleBorder(
@@ -311,7 +330,7 @@ class LmsStudentHeaderCard extends StatelessWidget {
                   side: const BorderSide(color: AppColors.borderSubtle),
                   backgroundColor: AppColors.surface,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
+                    horizontal: 8,
                     vertical: 10,
                   ),
                   shape: RoundedRectangleBorder(
